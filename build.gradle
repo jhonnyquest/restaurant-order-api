@@ -1,0 +1,34 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+	version =  '0.0.1'
+}
+
+repositories {
+	mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+	compile("org.springframework.boot:spring-boot-starter-web")
+	compile("org.springframework.boot:spring-boot-starter-actuator")
+	testCompile("org.springframework.boot:spring-boot-starter-test")
+	compile("mysql:mysql-connector-java:8.0.15")
+	compile("com.zaxxer:HikariCP:3.3.1")
+	compile("org.flywaydb:flyway-core:5.2.4")
+	compile 'commons-dbutils:commons-dbutils:1.7'
+} 
