@@ -54,6 +54,25 @@ public class ProxyEndpointController {
     }
 
     /**
+     * getOrderById: Method to create a new order given ID
+     * @author jmunoz
+     * @since 11/08/2019
+     * @param orderId Order universal identifier
+     * @see ResponseEntity <Object>
+     */
+    @RequestMapping(value = "orders/{order_id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> getOrderById(@PathVariable("order_id") String orderId) {
+
+        ResponseEntity<Object> responseEntity;
+        try {
+            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(orderService.getOrderById(orderId));
+        } catch (HttpClientErrorException ex) {
+            responseEntity = setErrorResponse(ex);
+        }
+        return responseEntity;
+    }
+
+    /**
      * getOrdersByStatus: Method to get a list of orders by status
      * @author jmunoz
      * @since 10/08/2019

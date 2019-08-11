@@ -72,28 +72,7 @@ public class OrderServiceManagerImpl implements OrderServiceManager {
 
         try {
             for (Order order : orders) {
-                OrderDTO orderDTO = new OrderDTO();
-                orderDTO.setId(order.getId());
-                orderDTO.setCustomerId(order.getCustomerId());
-                orderDTO.setStatus(order.getStatus());
-                orderDTO.setCreateDate(order.getCreateDate());
-                orderDTO.setUpdateDate(order.getUpdateDate());
-
-                List<OrderItemDTO> orderItemDTOList = new ArrayList<>();
-                List<OrderItem> orderItems = ordersRepository.getOrderItems(order.getId());
-                BigDecimal total = BigDecimal.valueOf(0.0);
-                for (OrderItem orderItem : orderItems) {
-                    total = total.add(orderItem.getSubTotal());
-                    Optional<Item> itemOpt = itemsRepository.getItemById(orderItem.getItemId());
-                    itemOpt.ifPresent(item -> orderItemDTOList.add(OrderItemDTOFromItem(item,
-                            orderItem.getQuantity(),
-                            orderItem.getSubTotal(),
-                            orderItem.getStatus())));
-                }
-
-                orderDTO.setItems(orderItemDTOList);
-                orderDTO.setTotal(total);
-                orderDTOList.add(orderDTO);
+                orderDTOList.add(getOrderDTO(order));
             }
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,5 +91,39 @@ public class OrderServiceManagerImpl implements OrderServiceManager {
         }
 
         return new SimpleResponse(true, textsHelper.getTranslation("api.orders.status.updated.message"), status);
+    }
+
+    @Override
+    public OrderDTO getOrderById(String orderId) {
+        Optional<Order> orderOpt = ordersRepository.getOrderById(orderId);
+        if (!orderOpt.isPresent()) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        }
+        return getOrderDTO(orderOpt.get());
+    }
+
+    private OrderDTO getOrderDTO(Order order) {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(order.getId());
+        orderDTO.setCustomerId(order.getCustomerId());
+        orderDTO.setStatus(order.getStatus());
+        orderDTO.setCreateDate(order.getCreateDate());
+        orderDTO.setUpdateDate(order.getUpdateDate());
+
+        List<OrderItemDTO> orderItemDTOList = new ArrayList<>();
+        List<OrderItem> orderItems = ordersRepository.getOrderItems(order.getId());
+        BigDecimal total = BigDecimal.valueOf(0.0);
+        for (OrderItem orderItem : orderItems) {
+            total = total.add(orderItem.getSubTotal());
+            Optional<Item> itemOpt = itemsRepository.getItemById(orderItem.getItemId());
+            itemOpt.ifPresent(item -> orderItemDTOList.add(OrderItemDTOFromItem(item,
+                    orderItem.getQuantity(),
+                    orderItem.getSubTotal(),
+                    orderItem.getStatus())));
+        }
+
+        orderDTO.setItems(orderItemDTOList);
+        orderDTO.setTotal(total);
+        return orderDTO;
     }
 }
