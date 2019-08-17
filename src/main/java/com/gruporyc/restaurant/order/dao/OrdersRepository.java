@@ -68,7 +68,7 @@ public class OrdersRepository {
                     "    status," +
                     "    create_date," +
                     "    update_date " +
-                    " FROM orders WHERE status = ?";
+                    " FROM orders WHERE status = ? ORDER BY create_date ASC";
 
             List<Order> orders = run.query(query,
                     rs -> {
@@ -159,7 +159,7 @@ public class OrdersRepository {
                     "    status," +
                     "    create_date," +
                     "    update_date " +
-                    " FROM order_item WHERE order_id = ?";
+                    " FROM order_item WHERE order_id = ? ORDER BY create_date ASC";
 
             List<OrderItem> orderItems = run.query(query,
                     rs -> {
@@ -210,6 +210,31 @@ public class OrdersRepository {
             } finally {
                 DbUtils.close(conn);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateOrderItemStatus(String orderId, String itemId, Status status) {
+        try {
+            Connection conn = ds.getConnection();
+            conn.setAutoCommit(false);
+            Statement stmt = conn.createStatement();
+            try {
+                String update = "UPDATE order_item " +
+                        "SET status = '" + status.name() + "'"+
+                        "WHERE " +
+                        "order_id = '" + orderId + "' AND " +
+                        "item_id = '" + itemId + "';";
+                stmt.executeUpdate(update);
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException(e);
+            } finally {
+                DbUtils.close(conn);
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
