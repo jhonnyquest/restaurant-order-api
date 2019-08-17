@@ -102,6 +102,19 @@ public class OrderServiceManagerImpl implements OrderServiceManager {
         return getOrderDTO(orderOpt.get());
     }
 
+    @Override
+    public SimpleResponse updateOrderItemStatus(String orderId, String itemId, String status) {
+        if(!ordersRepository.getOrderById(orderId).isPresent() || !itemsRepository.getItemById(itemId).isPresent())
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+        try {
+            ordersRepository.updateOrderItemStatus(orderId, itemId, Status.valueOf(status));
+        } catch (Exception e) {
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new SimpleResponse(true, textsHelper.getTranslation("api.order.item.status.updated.message"), status);
+    }
+
     private OrderDTO getOrderDTO(Order order) {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setId(order.getId());

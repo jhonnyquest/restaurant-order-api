@@ -15,4 +15,6 @@ public interface OrderServiceManager {
     SimpleResponse updateOrderStatus (String orderId, String status);
 
     OrderDTO getOrderById(String orderId);
+
+    SimpleResponse updateOrderItemStatus(String orderId, String itemId, String status);
 }

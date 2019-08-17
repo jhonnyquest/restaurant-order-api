@@ -91,7 +91,7 @@ public class ProxyEndpointController {
     }
 
     /**
-     * createOrder: Method to update given order by id
+     * updateOrderStatus: Method to update given order by id
      * @author jmunoz
      * @since 10/08/2019
      * @param orderId Order universal identifier
@@ -104,8 +104,32 @@ public class ProxyEndpointController {
 
         ResponseEntity<Object> responseEntity;
         try {
-            responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(
+            responseEntity = ResponseEntity.ok(
                     orderService.updateOrderStatus(orderId, payload.get("status").toString()));
+        } catch (HttpClientErrorException ex) {
+            responseEntity = setErrorResponse(ex);
+        }
+        return responseEntity;
+    }
+
+    /**
+     * updateOrderItemStatus: Method to update item status from a given order
+     * @author jmunoz
+     * @since 10/08/2019
+     * @param orderId Order universal identifier
+     * @param itemId Order universal identifier
+     * @param payload Request payload - status to be updated
+     * @see ResponseEntity <Object>
+     */
+    @RequestMapping(value = "orders/{orderId}/item/{itemId}/status", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Object> updateOrderItemStatus(@PathVariable("orderId") String orderId,
+                                                        @PathVariable("itemId") String itemId,
+                                                        @RequestBody ModelMap payload) {
+
+        ResponseEntity<Object> responseEntity;
+        try {
+            responseEntity = ResponseEntity.ok(
+                    orderService.updateOrderItemStatus(orderId, itemId, payload.get("status").toString()));
         } catch (HttpClientErrorException ex) {
             responseEntity = setErrorResponse(ex);
         }
