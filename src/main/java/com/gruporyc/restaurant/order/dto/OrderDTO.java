@@ -19,6 +19,7 @@ public class OrderDTO {
     private String customerId;
     @NotNull(message = "is required")
     private List<OrderItemDTO> items;
+    private String table;
     private String status;
     private String createDate;
     private String updateDate;
@@ -51,6 +52,21 @@ public class OrderDTO {
      */
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    /**
+     * @return the the table that request order
+     */
+    @JsonProperty("table")
+    public String getTable() {
+        return table;
+    }
+
+    /**
+     * @param table the table that request order
+     */
+    public void setTable(String table) {
+        this.table = table;
     }
 
     /**
@@ -133,9 +149,10 @@ public class OrderDTO {
         return "OrderDTO{" +
                 "id='" + id + '\'' +
                 ", total=" + total +
-                ", status='" + status + '\'' +
                 ", customerId='" + customerId + '\'' +
                 ", items=" + items +
+                ", table='" + table + '\'' +
+                ", status='" + status + '\'' +
                 ", createDate='" + createDate + '\'' +
                 ", updateDate='" + updateDate + '\'' +
                 '}';

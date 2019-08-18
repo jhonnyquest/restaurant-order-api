@@ -119,6 +119,7 @@ public class OrderServiceManagerImpl implements OrderServiceManager {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setId(order.getId());
         orderDTO.setCustomerId(order.getCustomerId());
+        orderDTO.setTable(order.getTable());
         orderDTO.setStatus(order.getStatus());
         orderDTO.setCreateDate(order.getCreateDate());
         orderDTO.setUpdateDate(order.getUpdateDate());

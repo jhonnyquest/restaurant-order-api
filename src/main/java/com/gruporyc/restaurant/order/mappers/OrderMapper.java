@@ -17,6 +17,7 @@ public class OrderMapper {
         return new Order.Builder()
                 .setId(orderDTO.getId())
                 .setTotal(total)
+                .setTable(orderDTO.getTable())
                 .setCustomerId(orderDTO.getCustomerId())
                 .build();
     }

@@ -29,12 +29,13 @@ public class OrdersRepository {
     public Optional<Order> getOrderById(String id) {
         QueryRunner run = new QueryRunner(ds);
         try {
-            String query = "SELECT id," +
-                    "    customer_id," +
-                    "    total," +
-                    "    status," +
-                    "    create_date," +
-                    "    update_date " +
+            String query = "SELECT `id`," +
+                    "    `customer_id`," +
+                    "    `total`," +
+                    "    `table`," +
+                    "    `status`," +
+                    "    `create_date`," +
+                    "    `update_date` " +
                     " FROM orders WHERE id = ?";
 
             Order order = run.query(query,
@@ -48,9 +49,10 @@ public class OrdersRepository {
                                 .setId(rs.getString(1))
                                 .setCustomerId(rs.getString(2))
                                 .setTotal(rs.getBigDecimal(3))
-                                .setStatus(rs.getString(4))
-                                .setCreateDate(rs.getString(5))
-                                .setUpdateDate(rs.getString(6))
+                                .setTable(rs.getString(4))
+                                .setStatus(rs.getString(5))
+                                .setCreateDate(rs.getString(6))
+                                .setUpdateDate(rs.getString(7))
                                 .build();
                     }, id);
             return Optional.ofNullable(order);
@@ -62,12 +64,13 @@ public class OrdersRepository {
     public List<Order> getOrdersStatus(Status status) {
         QueryRunner run = new QueryRunner(ds);
         try {
-            String query = "SELECT id," +
-                    "    customer_id," +
-                    "    total," +
-                    "    status," +
-                    "    create_date," +
-                    "    update_date " +
+            String query = "SELECT `id`," +
+                    "    `customer_id`," +
+                    "    `total`," +
+                    "    `table`," +
+                    "    `status`," +
+                    "    `create_date`," +
+                    "    `update_date` " +
                     " FROM orders WHERE status = ? ORDER BY create_date ASC";
 
             List<Order> orders = run.query(query,
@@ -78,9 +81,10 @@ public class OrdersRepository {
                                     .setId(rs.getString(1))
                                     .setCustomerId(rs.getString(2))
                                     .setTotal(rs.getBigDecimal(3))
-                                    .setStatus(rs.getString(4))
-                                    .setCreateDate(rs.getString(5))
-                                    .setUpdateDate(rs.getString(6))
+                                    .setTable(rs.getString(4))
+                                    .setStatus(rs.getString(5))
+                                    .setCreateDate(rs.getString(6))
+                                    .setUpdateDate(rs.getString(7))
                                     .build()
                             );
                         }
@@ -124,14 +128,16 @@ public class OrdersRepository {
             Connection conn = ds.getConnection();
             conn.setAutoCommit(false);
             try {
-                String insert = "INSERT INTO orders (id," +
-                        "    customer_id," +
-                        "    total," +
-                        "    status)" +
+                String insert = "INSERT INTO orders (`id`," +
+                        "    `customer_id`," +
+                        "    `total`," +
+                        "    `table`," +
+                        "    `status`)" +
                         "VALUES " +
                         "('" + orderId + "', " +
                         "'" + order.getCustomerId() + "', " +
                         "'" + order.getTotal() + "', " +
+                        "'" + order.getTable() + "', " +
                         "'" + Status.CREATED.name() + "');";
                 run.insert(conn, insert, new ScalarHandler<>());
                 conn.commit();

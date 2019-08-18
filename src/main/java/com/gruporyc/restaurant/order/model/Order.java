@@ -12,15 +12,17 @@ public class Order {
     private String id;
     private String customerId;
     private BigDecimal total;
-        private String status;
-        private String createDate;
-        private String updateDate;
+    private String table;
+    private String status;
+    private String createDate;
+    private String updateDate;
 
 
-    public Order(String id, String customerId, BigDecimal total, String status, String createDate, String updateDate) {
+    public Order(String id, String customerId, BigDecimal total, String table, String status, String createDate, String updateDate) {
         this.id = id;
         this.customerId = customerId;
         this.total = total;
+        this.table = table;
         this.status = status;
         this.createDate = createDate;
         this.updateDate = updateDate;
@@ -32,6 +34,10 @@ public class Order {
 
     public BigDecimal getTotal() {
         return total;
+    }
+
+    public String getTable() {
+        return table;
     }
 
     public String getStatus() {
@@ -53,6 +59,7 @@ public class Order {
     public static class Builder {
         private String id;
         private BigDecimal total;
+        private String table;
         private String status;
         private String customerId;
         private String createDate;
@@ -65,6 +72,11 @@ public class Order {
 
         public Order.Builder setTotal(BigDecimal total) {
             this.total = total;
+            return this;
+        }
+
+        public Order.Builder setTable(String table) {
+            this.table = table;
             return this;
         }
 
@@ -89,7 +101,7 @@ public class Order {
         }
 
         public Order build() {
-            return new Order(id, customerId, total, status, createDate, updateDate);
+            return new Order(id, customerId, total, table, status, createDate, updateDate);
         }
     }
 }
