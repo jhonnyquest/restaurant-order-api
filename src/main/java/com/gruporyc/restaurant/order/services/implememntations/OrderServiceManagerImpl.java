@@ -43,6 +43,10 @@ public class OrderServiceManagerImpl implements OrderServiceManager {
            throw new HttpClientErrorException(HttpStatus.CONFLICT);
         }
         try {
+            for (OrderItemDTO orderItem : newOrder.getItems()) {
+                Optional<Item> item = itemsRepository.getItemById(orderItem.getId());
+                item.ifPresent(item1 -> orderItem.setPrice(item1.getPrice()));
+            }
             String orderId = ordersRepository.createOrder(orderFromOrderDTO(newOrder));
             for (OrderItemDTO orderItemDTO : newOrder.getItems()) {
                 String itemId = orderItemDTO.getId();
