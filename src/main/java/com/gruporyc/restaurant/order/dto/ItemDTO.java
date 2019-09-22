@@ -29,7 +29,7 @@ public class ItemDTO {
     /**
      * @return the Order ItemDTO's universal identifier
      */
-    @JsonProperty("id")
+    @JsonProperty("product_id")
     public String getId() {
         return id;
     }
